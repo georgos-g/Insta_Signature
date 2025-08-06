@@ -23,12 +23,12 @@ yarn install
 
 1. Create a Facebook Developer account at [developers.facebook.com](https://developers.facebook.com)
 2. Create a new app and enable Instagram Basic Display API
-3. Get your Instagram Access Token
+3. Get your Instagram Access Token (no Business Account ID needed with new method)
 4. Update the `.env` file with your credentials:
 
 ```env
 # Instagram API Configuration
-INSTAGRAM_ACCESS_TOKEN=your_instagram_access_token_here
+INSTAGRAM_TOKEN=your_instagram_access_token_here
 
 # Personal Information
 SIGNATURE_NAME=Your Name
@@ -68,19 +68,18 @@ yarn start
 
 2. **Get User Access Token**:
 
-   - Use Facebook's Access Token Tool or Graph API Explorer
+   - Use Facebook's Access Token Tool
    - Generate a User Access Token with `instagram_graph_user_media` permission
-   - Use the endpoint: `https://graph.instagram.com/me/media`
 
-3. **Convert to Long-Lived Token** (recommended):
+3. **Get Business Account ID**:
 
    ```bash
-   curl -X GET "https://graph.facebook.com/v18.0/oauth/access_token?grant_type=fb_exchange_token&client_id=YOUR_APP_ID&client_secret=YOUR_APP_SECRET&fb_exchange_token=YOUR_SHORT_LIVED_TOKEN"
+   curl -X GET "https://graph.facebook.com/v18.0/me/accounts?access_token=YOUR_ACCESS_TOKEN"
    ```
 
-4. **Test Your Token**:
+4. **Convert to Long-Lived Token** (recommended):
    ```bash
-   curl "https://graph.instagram.com/me/media?fields=id,media_type&access_token=YOUR_ACCESS_TOKEN"
+   curl -X GET "https://graph.facebook.com/v18.0/oauth/access_token?grant_type=fb_exchange_token&client_id=YOUR_APP_ID&client_secret=YOUR_APP_SECRET&fb_exchange_token=YOUR_SHORT_LIVED_TOKEN"
    ```
 
 ## 📧 Email Client Setup
