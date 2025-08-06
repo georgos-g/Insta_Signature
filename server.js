@@ -74,11 +74,13 @@ async function fetchInstagramPosts() {
 
     const filteredPosts = data.data.filter(
       (post) =>
-        post.media_type === 'IMAGE' || post.media_type === 'CAROUSEL_ALBUM'
+        post.media_type === 'IMAGE' ||
+        post.media_type === 'CAROUSEL_ALBUM' ||
+        post.media_type === 'VIDEO'
     );
 
     console.log(
-      `After filtering: ${filteredPosts.length} image/carousel posts`
+      `After filtering: ${filteredPosts.length} image/carousel/video posts`
     );
     console.log(
       'Post types:',
@@ -103,20 +105,20 @@ async function fetchInstagramPosts() {
       },
       {
         id: 'mock_2',
-        media_type: 'IMAGE',
+        media_type: 'VIDEO',
         media_url: 'https://picsum.photos/400/400?random=2',
         thumbnail_url: 'https://picsum.photos/400/400?random=2',
         permalink: 'https://instagram.com/p/mock2',
-        caption: 'Mock Instagram post 2',
+        caption: 'Mock Instagram video 2',
         timestamp: new Date().toISOString(),
       },
       {
         id: 'mock_3',
-        media_type: 'IMAGE',
+        media_type: 'CAROUSEL_ALBUM',
         media_url: 'https://picsum.photos/400/400?random=3',
         thumbnail_url: 'https://picsum.photos/400/400?random=3',
         permalink: 'https://instagram.com/p/mock3',
-        caption: 'Mock Instagram post 3',
+        caption: 'Mock Instagram carousel 3',
         timestamp: new Date().toISOString(),
       },
       {
@@ -141,8 +143,12 @@ async function generateThumbnail(imageUrl, postId) {
     const imageBuffer = Buffer.from(response.data);
 
     const thumbnailSize = parseInt(process.env.THUMBNAIL_SIZE) || 80;
+    // Calculate 3:4 aspect ratio dimensions
+    const width = thumbnailSize;
+    const height = Math.round((thumbnailSize * 4) / 3); // 3:4 ratio
+
     const thumbnailBuffer = await sharp(imageBuffer)
-      .resize(thumbnailSize, thumbnailSize, { fit: 'cover' })
+      .resize(width, height, { fit: 'cover' })
       .jpeg({ quality: 80 })
       .toBuffer();
 
