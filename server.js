@@ -182,9 +182,14 @@ async function updateInstagramCache() {
   for (const post of posts) {
     if (!instagramCache.thumbnails.has(post.id)) {
       const imageUrl = post.thumbnail_url || post.media_url;
-      const thumbnailPath = await generateThumbnail(imageUrl, post.id);
+      let thumbnailPath = await generateThumbnail(imageUrl, post.id);
 
-      if (thumbnailPath) {
+      // If thumbnail generation fails for mock data, use the original URL
+      if (!thumbnailPath && post.id.startsWith('mock_')) {
+        thumbnailPath = imageUrl;
+        console.log(`Using original URL for mock post ${post.id}: ${imageUrl}`);
+        instagramCache.thumbnails.set(post.id, thumbnailPath);
+      } else if (thumbnailPath) {
         instagramCache.thumbnails.set(post.id, thumbnailPath);
       }
     }
@@ -264,6 +269,27 @@ app.get('/api/debug', (req, res) => {
       THUMBNAIL_SIZE: process.env.THUMBNAIL_SIZE || '80'
     }
   });
+});
+
+// Force refresh cache endpoint
+app.get('/api/refresh-cache', async (req, res) => {
+  try {
+    await updateInstagramCache();
+    res.json({
+      success: true,
+      message: 'Cache refreshed successfully',
+      postsCount: instagramCache.posts.length,
+      thumbnailsCount: instagramCache.thumbnails.size,
+      lastUpdate: new Date(instagramCache.lastUpdate).toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      postsCount: instagramCache.posts.length,
+      thumbnailsCount: instagramCache.thumbnails.size
+    });
+  }
 });
 
 // Schedule cache updates every hour
