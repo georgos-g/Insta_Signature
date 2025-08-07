@@ -1,5 +1,9 @@
 const { fetchInstagramPosts } = require('../lib/instagram');
-const { isCacheValid, updateCache, getPostsWithThumbnails } = require('../lib/cache');
+const {
+  isCacheValid,
+  updateCache,
+  getPostsWithThumbnails,
+} = require('../lib/cache');
 
 module.exports = async (req, res) => {
   try {
@@ -31,7 +35,7 @@ module.exports = async (req, res) => {
     }
 
     const postsWithThumbnails = getPostsWithThumbnails();
-    
+
     console.log(`Returning ${postsWithThumbnails.length} Instagram posts`);
     res.setHeader('Cache-Control', 'public, s-maxage=3600'); // Cache for 1 hour
     res.status(200).json(postsWithThumbnails);
