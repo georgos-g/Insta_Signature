@@ -2,29 +2,35 @@
   "version": 2,
   "builds": [
     {
-      "src": "server.js",
+      "src": "index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/**/*.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/signature",
-      "dest": "/server.js"
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
     },
     {
-      "src": "/api/(.*)",
-      "dest": "/server.js"
+      "src": "/signature",
+      "dest": "/index.js"
     },
     {
       "src": "/thumbnails/(.*)",
-      "dest": "/server.js"
+      "dest": "/index.js"
     },
     {
       "src": "/(.*)",
-      "dest": "/server.js"
+      "dest": "/index.js"
     }
   ],
   "env": {
     "NODE_ENV": "production"
-  }
+  },
+  "installCommand": "yarn install",
+  "buildCommand": "yarn build"
 }

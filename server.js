@@ -261,6 +261,13 @@ app.get('/api/signature-config', (req, res) => {
     email: process.env.SIGNATURE_EMAIL || 'your.email@company.com',
     phone: process.env.SIGNATURE_PHONE || '+1 (555) 123-4567',
     website: process.env.SIGNATURE_WEBSITE || 'https://yourwebsite.com',
+    mobile: process.env.SIGNATURE_MOBILE || '+1 (555) 987-6543',
+    address: {
+      street: process.env.SIGNATURE_ADDRESS_STREET || '1234 Bear Street',
+      postal_code: process.env.SIGNATURE_ADDRESS_POSTAL_CODE || '50677',
+      city: process.env.SIGNATURE_ADDRESS_CITY || 'Cologne',
+      country: process.env.SIGNATURE_ADDRESS_COUNTRY || 'Germany',
+    },
   });
 });
 
@@ -285,6 +292,15 @@ app.get('/api/debug', (req, res) => {
       SIGNATURE_NAME: !!process.env.SIGNATURE_NAME,
       SIGNATURE_TITLE: !!process.env.SIGNATURE_TITLE,
       SIGNATURE_COMPANY: !!process.env.SIGNATURE_COMPANY,
+      SIGNATURE_EMAIL: !!process.env.SIGNATURE_EMAIL,
+      SIGNATURE_PHONE: !!process.env.SIGNATURE_PHONE,
+      SIGNATURE_MOBILE: !!process.env.SIGNATURE_MOBILE,
+      SIGNATURE_WEBSITE: !!process.env.SIGNATURE_WEBSITE,
+      SIGNATURE_ADDRESS_STREET: !!process.env.SIGNATURE_ADDRESS_STREET,
+      SIGNATURE_ADDRESS_POSTAL_CODE:
+        !!process.env.SIGNATURE_ADDRESS_POSTAL_CODE,
+      SIGNATURE_ADDRESS_CITY: !!process.env.SIGNATURE_ADDRESS_CITY,
+      SIGNATURE_ADDRESS_COUNTRY: !!process.env.SIGNATURE_ADDRESS_COUNTRY,
       MAX_POSTS: process.env.MAX_POSTS || '4',
       THUMBNAIL_SIZE: process.env.THUMBNAIL_SIZE || '80',
     },
@@ -315,7 +331,8 @@ app.get('/api/refresh-cache', async (req, res) => {
 // Test Instagram API endpoint
 app.get('/api/test-instagram', async (req, res) => {
   try {
-    const accessToken = process.env.INSTAGRAM_TOKEN;
+    const accessToken =
+      process.env.INSTAGRAM_TOKEN || process.env.INSTAGRAM_ACCESS_TOKEN;
 
     if (!accessToken) {
       return res.json({
