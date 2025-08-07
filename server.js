@@ -219,7 +219,9 @@ app.get('/api/instagram-posts', async (req, res) => {
   const postsWithThumbnails = instagramCache.posts
     .map((post) => ({
       ...post,
-      thumbnail_path: instagramCache.thumbnails.get(post.id),
+      thumbnail_path:
+        instagramCache.thumbnails.get(post.id) ||
+        (post.id.startsWith('mock_') ? post.thumbnail_url : null),
     }))
     .filter((post) => post.thumbnail_path);
 
