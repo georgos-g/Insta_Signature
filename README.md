@@ -52,21 +52,25 @@ yarn start
 ### 4. Deploy to Vercel
 
 #### Quick Deploy
+
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/georgos-g/Insta_Signature)
 
 #### Manual Deployment
 
 1. **Install Vercel CLI**:
+
    ```bash
    npm i -g vercel
    ```
 
 2. **Login to Vercel**:
+
    ```bash
    vercel login
    ```
 
 3. **Deploy**:
+
    ```bash
    vercel --prod
    ```
@@ -81,7 +85,6 @@ yarn start
    - `SIGNATURE_WEBSITE` - Your website
    - `MAX_POSTS` - Number of posts (default: 4)
    - `THUMBNAIL_SIZE` - Thumbnail width (default: 80)
-
 
 ### 4. Generate Your Signature
 

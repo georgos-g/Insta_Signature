@@ -213,6 +213,16 @@ app.get('/signature', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'signature.html'));
 });
 
+// Serve homepage
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Serve favicon
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'favicon.svg'));
+});
+
 // API endpoint to get signature configuration
 app.get('/api/signature-config', (req, res) => {
   res.json({
