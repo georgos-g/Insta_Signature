@@ -93,9 +93,15 @@ async function fetchInstagramPosts() {
 
     // Log more details for debugging
     console.log('Instagram API Error Details:', {
-      hasToken: !!(process.env.INSTAGRAM_TOKEN || process.env.INSTAGRAM_ACCESS_TOKEN),
-      tokenLength: (process.env.INSTAGRAM_TOKEN || process.env.INSTAGRAM_ACCESS_TOKEN || '').length,
-      environment: process.env.NODE_ENV
+      hasToken: !!(
+        process.env.INSTAGRAM_TOKEN || process.env.INSTAGRAM_ACCESS_TOKEN
+      ),
+      tokenLength: (
+        process.env.INSTAGRAM_TOKEN ||
+        process.env.INSTAGRAM_ACCESS_TOKEN ||
+        ''
+      ).length,
+      environment: process.env.NODE_ENV,
     });
 
     // Always return mock data for testing when there's an error
@@ -249,9 +255,12 @@ app.get('/api/signature-config', (req, res) => {
 
 // Debug endpoint to check environment variables and Instagram API
 app.get('/api/debug', (req, res) => {
-  const hasToken = !!process.env.INSTAGRAM_TOKEN || !!process.env.INSTAGRAM_ACCESS_TOKEN;
-  const tokenLength = hasToken ? (process.env.INSTAGRAM_TOKEN || process.env.INSTAGRAM_ACCESS_TOKEN).length : 0;
-  
+  const hasToken =
+    !!process.env.INSTAGRAM_TOKEN || !!process.env.INSTAGRAM_ACCESS_TOKEN;
+  const tokenLength = hasToken
+    ? (process.env.INSTAGRAM_TOKEN || process.env.INSTAGRAM_ACCESS_TOKEN).length
+    : 0;
+
   res.json({
     environment: process.env.NODE_ENV || 'development',
     hasInstagramToken: hasToken,
@@ -259,15 +268,15 @@ app.get('/api/debug', (req, res) => {
     cacheStatus: {
       postsCount: instagramCache.posts.length,
       lastUpdate: new Date(instagramCache.lastUpdate).toISOString(),
-      thumbnailsCount: instagramCache.thumbnails.size
+      thumbnailsCount: instagramCache.thumbnails.size,
     },
     envVars: {
       SIGNATURE_NAME: !!process.env.SIGNATURE_NAME,
       SIGNATURE_TITLE: !!process.env.SIGNATURE_TITLE,
       SIGNATURE_COMPANY: !!process.env.SIGNATURE_COMPANY,
       MAX_POSTS: process.env.MAX_POSTS || '4',
-      THUMBNAIL_SIZE: process.env.THUMBNAIL_SIZE || '80'
-    }
+      THUMBNAIL_SIZE: process.env.THUMBNAIL_SIZE || '80',
+    },
   });
 });
 
@@ -280,14 +289,14 @@ app.get('/api/refresh-cache', async (req, res) => {
       message: 'Cache refreshed successfully',
       postsCount: instagramCache.posts.length,
       thumbnailsCount: instagramCache.thumbnails.size,
-      lastUpdate: new Date(instagramCache.lastUpdate).toISOString()
+      lastUpdate: new Date(instagramCache.lastUpdate).toISOString(),
     });
   } catch (error) {
     res.status(500).json({
       success: false,
       error: error.message,
       postsCount: instagramCache.posts.length,
-      thumbnailsCount: instagramCache.thumbnails.size
+      thumbnailsCount: instagramCache.thumbnails.size,
     });
   }
 });
