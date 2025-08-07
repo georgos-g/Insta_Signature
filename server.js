@@ -91,7 +91,14 @@ async function fetchInstagramPosts() {
   } catch (error) {
     console.error('Error fetching Instagram posts:', error.message || error);
 
-    // Return mock data for testing if token is invalid
+    // Log more details for debugging
+    console.log('Instagram API Error Details:', {
+      hasToken: !!(process.env.INSTAGRAM_TOKEN || process.env.INSTAGRAM_ACCESS_TOKEN),
+      tokenLength: (process.env.INSTAGRAM_TOKEN || process.env.INSTAGRAM_ACCESS_TOKEN || '').length,
+      environment: process.env.NODE_ENV
+    });
+
+    // Always return mock data for testing when there's an error
     console.log('Using mock Instagram data for testing...');
     return [
       {
@@ -232,6 +239,30 @@ app.get('/api/signature-config', (req, res) => {
     email: process.env.SIGNATURE_EMAIL || 'your.email@company.com',
     phone: process.env.SIGNATURE_PHONE || '+1 (555) 123-4567',
     website: process.env.SIGNATURE_WEBSITE || 'https://yourwebsite.com',
+  });
+});
+
+// Debug endpoint to check environment variables and Instagram API
+app.get('/api/debug', (req, res) => {
+  const hasToken = !!process.env.INSTAGRAM_TOKEN || !!process.env.INSTAGRAM_ACCESS_TOKEN;
+  const tokenLength = hasToken ? (process.env.INSTAGRAM_TOKEN || process.env.INSTAGRAM_ACCESS_TOKEN).length : 0;
+  
+  res.json({
+    environment: process.env.NODE_ENV || 'development',
+    hasInstagramToken: hasToken,
+    tokenLength: tokenLength,
+    cacheStatus: {
+      postsCount: instagramCache.posts.length,
+      lastUpdate: new Date(instagramCache.lastUpdate).toISOString(),
+      thumbnailsCount: instagramCache.thumbnails.size
+    },
+    envVars: {
+      SIGNATURE_NAME: !!process.env.SIGNATURE_NAME,
+      SIGNATURE_TITLE: !!process.env.SIGNATURE_TITLE,
+      SIGNATURE_COMPANY: !!process.env.SIGNATURE_COMPANY,
+      MAX_POSTS: process.env.MAX_POSTS || '4',
+      THUMBNAIL_SIZE: process.env.THUMBNAIL_SIZE || '80'
+    }
   });
 });
 
