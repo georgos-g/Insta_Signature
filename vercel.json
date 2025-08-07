@@ -1,45 +1,16 @@
 {
-  "version": 2,
-  "functions": {
-    "api/*.js": {
-      "runtime": "@vercel/node"
+  "rewrites": [
+    {
+      "source": "/signature",
+      "destination": "/index.js"
+    },
+    {
+      "source": "/thumbnails/(.*)",
+      "destination": "/index.js"
+    },
+    {
+      "source": "/",
+      "destination": "/index.js"
     }
-  },
-  "routes": [
-    {
-      "src": "/api/signature-config",
-      "dest": "/api/signature-config.js"
-    },
-    {
-      "src": "/api/instagram-posts",
-      "dest": "/api/instagram-posts.js"
-    },
-    {
-      "src": "/api/debug",
-      "dest": "/api/debug.js"
-    },
-    {
-      "src": "/api/test-instagram",
-      "dest": "/api/test-instagram.js"
-    },
-    {
-      "src": "/api/refresh-cache",
-      "dest": "/api/refresh-cache.js"
-    },
-    {
-      "src": "/signature",
-      "dest": "/index.js"
-    },
-    {
-      "src": "/thumbnails/(.*)",
-      "dest": "/index.js"
-    },
-    {
-      "src": "/",
-      "dest": "/index.js"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
