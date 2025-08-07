@@ -1,19 +1,30 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "index.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
+  "functions": {
+    "api/*.js": {
+      "runtime": "@vercel/node"
     }
-  ],
+  },
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "src": "/api/signature-config",
+      "dest": "/api/signature-config.js"
+    },
+    {
+      "src": "/api/instagram-posts",
+      "dest": "/api/instagram-posts.js"
+    },
+    {
+      "src": "/api/debug",
+      "dest": "/api/debug.js"
+    },
+    {
+      "src": "/api/test-instagram",
+      "dest": "/api/test-instagram.js"
+    },
+    {
+      "src": "/api/refresh-cache",
+      "dest": "/api/refresh-cache.js"
     },
     {
       "src": "/signature",
@@ -24,13 +35,11 @@
       "dest": "/index.js"
     },
     {
-      "src": "/(.*)",
+      "src": "/",
       "dest": "/index.js"
     }
   ],
   "env": {
     "NODE_ENV": "production"
-  },
-  "installCommand": "yarn install",
-  "buildCommand": "yarn build"
+  }
 }

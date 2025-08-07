@@ -64,7 +64,14 @@ if (process.env.NODE_ENV !== 'production') {
       company: process.env.SIGNATURE_COMPANY || 'Your Company',
       email: process.env.SIGNATURE_EMAIL || 'your.email@company.com',
       phone: process.env.SIGNATURE_PHONE || '+1 (555) 123-4567',
+      mobile: process.env.SIGNATURE_MOBILE || '',
       website: process.env.SIGNATURE_WEBSITE || 'https://yourwebsite.com',
+      address: {
+        street: process.env.SIGNATURE_ADDRESS_STREET || '',
+        postalCode: process.env.SIGNATURE_ADDRESS_POSTAL_CODE || '',
+        city: process.env.SIGNATURE_ADDRESS_CITY || '',
+        country: process.env.SIGNATURE_ADDRESS_COUNTRY || '',
+      },
     });
   });
 

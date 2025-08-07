@@ -1,27 +1,26 @@
 const { fetchInstagramPosts } = require('../lib/instagram');
-const {
-  isCacheValid,
-  updateCache,
-  getPostsWithThumbnails,
-} = require('../lib/cache');
+const { isCacheValid, updateCache, getPostsWithThumbnails } = require('../lib/cache');
 
 module.exports = async (req, res) => {
-  // Enable CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-
-  if (req.method !== 'GET') {
-    res.status(405).json({ error: 'Method not allowed' });
-    return;
-  }
-
   try {
+    // Enable CORS
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Content-Type', 'application/json');
+
+    if (req.method === 'OPTIONS') {
+      res.status(200).end();
+      return;
+    }
+
+    if (req.method !== 'GET') {
+      res.status(405).json({ error: 'Method not allowed' });
+      return;
+    }
+
+    console.log('Loading Instagram posts...');
+
     // Check if cache is valid
     if (!isCacheValid()) {
       console.log('Cache is invalid, fetching new Instagram posts...');
@@ -32,7 +31,8 @@ module.exports = async (req, res) => {
     }
 
     const postsWithThumbnails = getPostsWithThumbnails();
-
+    
+    console.log(`Returning ${postsWithThumbnails.length} Instagram posts`);
     res.setHeader('Cache-Control', 'public, s-maxage=3600'); // Cache for 1 hour
     res.status(200).json(postsWithThumbnails);
   } catch (error) {
@@ -40,6 +40,7 @@ module.exports = async (req, res) => {
     res.status(500).json({
       error: 'Failed to fetch Instagram posts',
       details: error.message,
+      stack: error.stack,
     });
   }
 };
