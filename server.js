@@ -55,8 +55,17 @@ async function fetchInstagramPosts() {
       process.env.MAX_POSTS || 4
     }`;
 
+    console.log('Instagram API URL:', url);
+
     const response = await fetch(url);
+    console.log('Instagram API Response Status:', response.status);
+    console.log(
+      'Instagram API Response Headers:',
+      Object.fromEntries(response.headers.entries())
+    );
+
     const data = await response.json();
+    console.log('Instagram API Response Data:', JSON.stringify(data, null, 2));
 
     // Check for API errors
     if (data.error) {
@@ -66,7 +75,7 @@ async function fetchInstagramPosts() {
 
     // If there is no data, return empty array
     if (!data || !data.data || data.data.length === 0) {
-      console.log('No Instagram data returned');
+      console.log('No Instagram data returned - Data object:', data);
       return [];
     }
 
@@ -299,6 +308,62 @@ app.get('/api/refresh-cache', async (req, res) => {
       error: error.message,
       postsCount: instagramCache.posts.length,
       thumbnailsCount: instagramCache.thumbnails.size,
+    });
+  }
+});
+
+// Test Instagram API endpoint
+app.get('/api/test-instagram', async (req, res) => {
+  try {
+    const accessToken = process.env.INSTAGRAM_TOKEN;
+
+    if (!accessToken) {
+      return res.json({
+        success: false,
+        error: 'INSTAGRAM_TOKEN not configured',
+        environment: process.env.NODE_ENV || 'development',
+      });
+    }
+
+    const url = `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url,timestamp&access_token=${accessToken}&limit=1`;
+
+    console.log(
+      'Test Instagram API - Making request to:',
+      url.replace(accessToken, '[TOKEN_HIDDEN]')
+    );
+
+    const response = await fetch(url);
+    const responseText = await response.text();
+
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      return res.json({
+        success: false,
+        error: 'Failed to parse Instagram API response',
+        responseStatus: response.status,
+        responseHeaders: Object.fromEntries(response.headers.entries()),
+        responseText: responseText,
+        parseError: parseError.message,
+        environment: process.env.NODE_ENV || 'development',
+      });
+    }
+
+    res.json({
+      success: true,
+      responseStatus: response.status,
+      responseHeaders: Object.fromEntries(response.headers.entries()),
+      data: data,
+      tokenLength: accessToken.length,
+      environment: process.env.NODE_ENV || 'development',
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      error: error.message,
+      stack: error.stack,
+      environment: process.env.NODE_ENV || 'development',
     });
   }
 });
