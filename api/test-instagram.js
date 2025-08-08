@@ -16,13 +16,14 @@ module.exports = async (req, res) => {
       return;
     }
 
-    const accessToken = process.env.INSTAGRAM_TOKEN || process.env.INSTAGRAM_ACCESS_TOKEN;
+    const accessToken =
+      process.env.INSTAGRAM_TOKEN || process.env.INSTAGRAM_ACCESS_TOKEN;
 
     if (!accessToken) {
       return res.status(200).json({
         success: false,
         error: 'INSTAGRAM_TOKEN not configured',
-        environment: process.env.NODE_ENV || 'development'
+        environment: process.env.NODE_ENV || 'development',
       });
     }
 

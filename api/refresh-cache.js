@@ -17,10 +17,11 @@ module.exports = async (req, res) => {
     }
 
     console.log('Force refreshing Instagram cache...');
-    
+
     res.status(200).json({
       success: true,
-      message: 'Cache refresh triggered (serverless functions refresh automatically)',
+      message:
+        'Cache refresh triggered (serverless functions refresh automatically)',
       serverless: true,
       note: 'In serverless architecture, each function call fetches fresh data',
       timestamp: new Date().toISOString(),

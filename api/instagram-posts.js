@@ -45,20 +45,26 @@ const MOCK_INSTAGRAM_POSTS = [
 // Fetch Instagram posts
 async function fetchInstagramPosts() {
   try {
-    const accessToken = process.env.INSTAGRAM_TOKEN || process.env.INSTAGRAM_ACCESS_TOKEN;
+    const accessToken =
+      process.env.INSTAGRAM_TOKEN || process.env.INSTAGRAM_ACCESS_TOKEN;
 
     if (!accessToken) {
       console.error('Instagram access token not configured');
       return MOCK_INSTAGRAM_POSTS;
     }
 
-    console.log(`Fetching Instagram posts with limit: ${process.env.MAX_POSTS || 4}`);
+    console.log(
+      `Fetching Instagram posts with limit: ${process.env.MAX_POSTS || 4}`
+    );
 
     const url = `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url,timestamp&access_token=${accessToken}&limit=${
       process.env.MAX_POSTS || 4
     }`;
 
-    console.log('Instagram API URL:', url.replace(accessToken, '[TOKEN_HIDDEN]'));
+    console.log(
+      'Instagram API URL:',
+      url.replace(accessToken, '[TOKEN_HIDDEN]')
+    );
 
     const response = await fetch(url);
     console.log('Instagram API Response Status:', response.status);
@@ -88,12 +94,14 @@ async function fetchInstagramPosts() {
     );
 
     // Add thumbnail_path for serverless (use original URLs)
-    const postsWithThumbnails = filteredPosts.map(post => ({
+    const postsWithThumbnails = filteredPosts.map((post) => ({
       ...post,
       thumbnail_path: post.thumbnail_url || post.media_url,
     }));
 
-    console.log(`After filtering: ${postsWithThumbnails.length} posts with thumbnails`);
+    console.log(
+      `After filtering: ${postsWithThumbnails.length} posts with thumbnails`
+    );
 
     return postsWithThumbnails;
   } catch (error) {
@@ -124,7 +132,7 @@ module.exports = async (req, res) => {
     console.log('Loading Instagram posts...');
 
     const posts = await fetchInstagramPosts();
-    
+
     console.log(`Returning ${posts.length} Instagram posts`);
     res.setHeader('Cache-Control', 'public, s-maxage=3600'); // Cache for 1 hour
     res.status(200).json(posts);

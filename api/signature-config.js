@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
     }
 
     console.log('Loading signature configuration...');
-    
+
     const config = {
       name: process.env.SIGNATURE_NAME || 'Your Name',
       title: process.env.SIGNATURE_TITLE || 'Your Title',
