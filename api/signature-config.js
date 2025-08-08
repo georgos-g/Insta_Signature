@@ -26,6 +26,7 @@ module.exports = async (req, res) => {
       phone: process.env.SIGNATURE_PHONE || '+1 (555) 123-4567',
       mobile: process.env.SIGNATURE_MOBILE || '',
       website: process.env.SIGNATURE_WEBSITE || 'https://yourwebsite.com',
+      logoUrl: process.env.SIGNATURE_LOGO_URL || '/logo.png',
       address: {
         street: process.env.SIGNATURE_ADDRESS_STREET || '',
         postalCode: process.env.SIGNATURE_ADDRESS_POSTAL_CODE || '',
