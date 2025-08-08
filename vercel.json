@@ -1,11 +1,6 @@
 {
   "version": 2,
-  "routes": [
-    {
-      "src": "/signature",
-      "dest": "/signature.html"
-    }
-  ],
+
   "headers": [
     {
       "source": "/api/(.*)",
