@@ -1,11 +1,10 @@
 {
   "version": 2,
-  "routes": [
-    { "src": "^/$", "dest": "/public/index.html" },
-    { "src": "^/signature$", "dest": "/public/signature.html" },
-    { "src": "^/favicon.ico$", "dest": "/public/favicon.svg" }
-  ],
-  "env": {},
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "nodejs20.x"
+    }
+  },
   "headers": [
     {
       "source": "/api/(.*)",
