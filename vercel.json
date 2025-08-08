@@ -1,11 +1,14 @@
 {
   "version": 2,
- 
+  "routes": [
+    {
+      "src": "/signature",
+      "dest": "/signature.js"
+    }
+  ],
   "headers": [
     {
       "source": "/api/(.*)",
-      
-
       "headers": [
         { "key": "Access-Control-Allow-Origin", "value": "*" },
         { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS" },
