@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signature</title>
+    <style>
+        /* Neutral styling to look good in light and dark; content inherits color */
+        :root {
+            color-scheme: light dark;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* Signature block */
+        .sig-root {
+            color: inherit;
+            max-width: 560px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="signature" class="sig-root"></div>
+
+    <script>
+        let signatureConfig = {};
+        let instagramPosts = [];
+
+        async function fetchJSON (url) {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error(`HTTP ${ res.status }`);
+            return res.json();
+        }
+
+        function renderSignatureHTML () {
+            const currentDomain = window.location.origin;
+
+            let instagramPostsHTML = '';
+            instagramPosts.forEach((post) => {
+                const src = post.thumbnail_path && post.thumbnail_path.startsWith('http')
+                    ? post.thumbnail_path
+                    : (post.thumbnail_path ? currentDomain + post.thumbnail_path : '');
+                if (!src) return;
+                instagramPostsHTML += `
+          <a href="${ post.permalink }" target="_blank" style="display:inline-block; margin-right:8px; margin-bottom:8px;">
+            <img src="${ src }" alt="Instagram post" style="width:60px; height:80px; border-radius:8px; object-fit:cover;" />
+          </a>`;
+            });
+
+            const addressLine = (signatureConfig.address && (signatureConfig.address.street || signatureConfig.address.city))
+                ? `${ [signatureConfig.address.street, [signatureConfig.address.postalCode || signatureConfig.address.postal_code, signatureConfig.address.city].filter(Boolean).join(' ')].filter(Boolean).join(' | ') }`
+                : '';
+
+            const html = `
+        <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:14px; line-height:1.6; color:inherit; max-width:560px;">
+          <div style="display:flex; align-items:center; gap:10px; margin:0 0 8px 0; font-size:14px; color:inherit;">
+            
+            <span style="opacity:0.8">Freundliche Grüße | Best Regards</span>
+          </div>
+          <div style="margin-bottom:10px;">
+            <div style="font-size:20px; font-weight:700; margin:0 0 2px 0; color:inherit;">${ signatureConfig.name || '' }</div>
+            <div style="font-size:15px; margin:0 0 10px 0; font-weight:600; color:inherit;">${ signatureConfig.title || '' }</div>
+            <div style="font-size:14px; font-weight:700; margin:0 0 10px 0; letter-spacing:0.2px; color:inherit; text-transform:uppercase;">${ signatureConfig.company || '' }</div>
+            ${ signatureConfig.logoUrl ? `<img src="${ signatureConfig.logoUrl }" alt="Company logo" style="display:block; max-width:260px; height:auto; margin:12px 0;" />` : '' }
+            <div style="font-size:18px; font-weight:700; margin:16px 0 10px; color:inherit;">Event Entertainment</div>
+            ${ addressLine ? `<div style=\"margin:4px 0; font-size:14px; color:inherit;\">${ addressLine }</div>` : '' }
+            <div style="margin:4px 0; font-size:14px; color:inherit;"> T ${ signatureConfig.phone || '' }${ signatureConfig.mobile ? ` | M ${ signatureConfig.mobile }` : '' }</div>
+            <div style="margin:4px 0; font-size:14px; color:inherit;"><a href="${ signatureConfig.website || '#' }" target="_blank" style="color:inherit; text-decoration:underline;">${ signatureConfig.website || '' }</a> | <a href="mailto:${ signatureConfig.email || '' }" style="color:inherit; text-decoration:underline;">${ signatureConfig.email || '' }</a></div>
+          </div>
+          ${ instagramPostsHTML ? `
+          <hr style="height:1px; margin:12px 0; border:none; background:currentColor; opacity:0.15;">
+          <div style="margin-top:10px;">
+            <div style="font-size:12px; opacity:0.8; margin-bottom:6px;">Latest from Instagram</div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">${ instagramPostsHTML }</div>
+          </div>` : '' }
+        </div>`;
+
+            return html;
+        }
+
+        async function init () {
+            try {
+                [signatureConfig, instagramPosts] = await Promise.all([
+                    fetchJSON('/api/signature-config'),
+                    fetchJSON('/api/instagram-posts')
+                ]);
+            } catch (e) {
+                // Fallback: still render with whatever we have
+                console.error('Failed to load data', e);
+            }
+            const container = document.getElementById('signature');
+            container.innerHTML = renderSignatureHTML();
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

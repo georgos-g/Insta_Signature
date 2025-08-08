@@ -2,122 +2,121 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dynamic Email Signature</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
+            padding: 24px;
+            /* No background color to respect light/dark environments */
         }
 
         .signature-container {
-            max-width: 600px;
+            max-width: 720px;
             margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            /* Neutral container: no background, shadow or borders */
+            padding: 0 4px;
         }
 
         .signature {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 14px;
-            line-height: 1.4;
-            color: #333;
-            max-width: 500px;
+            line-height: 1.6;
+            color: inherit;
+            /* Inherit from environment */
+            max-width: 560px;
             border-collapse: collapse;
         }
 
-        .contact-info {
-            margin-bottom: 15px;
+        .greeting {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 12px 0;
+            font-size: 14px;
+            color: inherit;
+        }
+
+        .greeting .pipe {
+            font-weight: 600;
+            letter-spacing: 1px;
         }
 
         .name {
-            font-size: 18px;
-            font-weight: 600;
-            color: #2c3e50;
+            font-size: 17px;
+            font-weight: 700;
             margin: 0 0 2px 0;
+            color: inherit;
         }
 
         .title {
-            font-size: 14px;
-            color: #7f8c8d;
-            margin: 0 0 8px 0;
+            font-size: 15px;
+            margin: 0 0 10px 0;
+            font-weight: 600;
+            color: inherit;
         }
 
         .company {
-            font-size: 14px;
-            font-weight: 500;
-            color: #34495e;
-            margin: 0 0 8px 0;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            letter-spacing: 0.2px;
+            color: inherit;
+            text-transform: uppercase;
         }
 
         .contact-item {
-            margin: 3px 0;
-            font-size: 13px;
+            margin: 4px 0;
+            font-size: 14px;
+            color: inherit;
         }
 
-        .contact-item a {
-            color: #3498db;
-            text-decoration: none;
+        .muted {
+            opacity: 0.8;
         }
 
-        .contact-item a:hover {
+        a {
+            color: inherit;
+            text-decoration: underline;
+        }
+
+        a:hover {
             text-decoration: underline;
         }
 
         .separator {
             height: 1px;
-            background: linear-gradient(to right, #e74c3c, #f39c12, #f1c40f, #27ae60, #3498db, #9b59b6);
-            margin: 15px 0;
+            margin: 14px 0;
             border: none;
+            background: currentColor;
+            opacity: 0.15;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 16px 0 10px;
+        }
+
+        .logo {
+            display: block;
+            max-width: 260px;
+            height: auto;
+            margin: 12px 0;
         }
 
         .instagram-section {
-            margin-top: 15px;
+            margin-top: 12px;
         }
 
         .instagram-header {
             font-size: 12px;
-            color: #7f8c8d;
+            opacity: 0.8;
             margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 5px;
-        }
-
-        .instagram-icon {
-            width: 16px;
-            height: 16px;
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-            border-radius: 4px;
-            position: relative;
-        }
-
-        .instagram-icon::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 8px;
-            height: 8px;
-            border: 1.5px solid white;
-            border-radius: 2px;
-        }
-
-        .instagram-icon::after {
-            content: '';
-            position: absolute;
-            top: 3px;
-            right: 3px;
-            width: 2px;
-            height: 2px;
-            background: white;
-            border-radius: 50%;
+            gap: 6px;
         }
 
         .instagram-posts {
@@ -129,17 +128,14 @@
         .instagram-post {
             width: 80px;
             height: 110px;
-            /* 3:4 aspect ratio: 60px * 4/3 = 80px */
-            border-radius: 4px;
+            border-radius: 6px;
             overflow: hidden;
             transition: transform 0.2s ease;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .instagram-post:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .instagram-post img {
@@ -149,81 +145,81 @@
         }
 
         .loading {
-            color: #7f8c8d;
+            opacity: 0.7;
             font-style: italic;
             font-size: 12px;
         }
 
         .error {
-            color: #e74c3c;
+            color: #c0392b;
             font-size: 12px;
         }
 
         .signature-preview {
             margin-top: 30px;
             padding-top: 20px;
-            border-top: 2px solid #ecf0f1;
+            border-top: 1px solid currentColor;
+            opacity: 0.95;
         }
 
         .signature-preview h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
+            font-weight: 600;
         }
 
         .copy-instructions {
-            background: #f8f9fa;
-            padding: 15px;
+            padding: 12px;
             border-radius: 6px;
-            margin-top: 15px;
+            margin-top: 12px;
             font-size: 13px;
-            color: #6c757d;
+            opacity: 0.9;
+            border: 1px dashed currentColor;
         }
 
         .copy-button {
-            background: #3498db;
-            color: white;
-            border: none;
+            background: transparent;
+            color: inherit;
+            border: 1px solid currentColor;
             padding: 8px 16px;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 13px;
             margin-top: 10px;
         }
 
         .copy-button:hover {
-            background: #2980b9;
+            filter: brightness(0.9);
         }
     </style>
 </head>
 
 <body>
     <div class="signature-container">
-        <h2 style="color: #2c3e50; margin-bottom: 20px;">📧 Dynamic Email Signature with Instagram Posts</h2>
+        <h2 style="margin: 0 0 16px 0; font-weight: 700;">Dynamic Email Signature with Instagram Posts</h2>
 
         <div id="signature-preview">
             <table class="signature" cellpadding="0" cellspacing="0">
                 <tr>
                     <td>
                         <div class="contact-info">
+                            <div class="greeting">
+                                <!-- <span class="pipe">|</span> -->
+                                <span class="muted">Freundliche Grüße | Best Regards</span>
+                            </div>
                             <div class="name" id="name">Loading...</div>
                             <div class="title" id="title">Loading...</div>
                             <div class="company" id="company">Loading...</div>
-                            <div class="contact-item">
-                                📧 <a href="#" id="email">Loading...</a>
-                            </div>
-                            <div class="contact-item">
-                                📞 <span id="phone">Loading...</span>
-                            </div>
-                            <div class="contact-item">
-                                🌐 <a href="#" id="website" target="_blank">Loading...</a>
-                            </div>
+                            <img id="companyLogo" class="logo" alt="Company logo" style="display:none;" />
+                            <div class="section-title">Event Entertainment</div>
+                            <div class="contact-item"> <a href="#" id="email">Loading...</a></div>
+                            <div class="contact-item"><span id="phone">Loading...</span></div>
+                            <div class="contact-item"> <a href="#" id="website" target="_blank">Loading...</a></div>
                         </div>
 
-                        <hr class="separator">
+                        <hr class="separator" />
 
                         <div class="instagram-section">
                             <div class="instagram-header">
-                                <div class="instagram-icon"></div>
                                 <span>Latest from Instagram</span>
                             </div>
                             <div class="instagram-posts" id="instagram-posts">
@@ -255,10 +251,7 @@
                 <strong>Note:</strong> The Instagram images will update automatically as long as your server is running.
             </div>
 
-            <button class="copy-button" onclick="copySignatureHTML()">
-                📋 Copy Signature HTML
-            </button>
-
+            <button class="copy-button" onclick="copySignatureHTML()">📋 Copy Signature HTML</button>
             <div id="signature-html" style="display: none;"></div>
         </div>
     </div>
@@ -278,6 +271,13 @@
                 document.getElementById('title').textContent = signatureConfig.title;
                 document.getElementById('company').textContent = signatureConfig.company;
 
+                // Optional logo support via SIGNATURE_LOGO_URL
+                if (signatureConfig.logoUrl) {
+                    const logoEl = document.getElementById('companyLogo');
+                    logoEl.src = signatureConfig.logoUrl;
+                    logoEl.style.display = 'block';
+                }
+
                 const emailLink = document.getElementById('email');
                 emailLink.textContent = signatureConfig.email;
                 emailLink.href = `mailto:${ signatureConfig.email }`;
@@ -287,7 +287,6 @@
                 const websiteLink = document.getElementById('website');
                 websiteLink.textContent = signatureConfig.website;
                 websiteLink.href = signatureConfig.website;
-
             } catch (error) {
                 console.error('Error loading signature config:', error);
             }
@@ -308,7 +307,7 @@
 
                 postsContainer.innerHTML = '';
 
-                instagramPosts.forEach(post => {
+                instagramPosts.forEach((post) => {
                     const postElement = document.createElement('a');
                     postElement.className = 'instagram-post';
                     postElement.href = post.permalink;
@@ -324,7 +323,6 @@
                 });
 
                 updateSignatureHTML();
-
             } catch (error) {
                 console.error('Error loading Instagram posts:', error);
                 document.getElementById('instagram-posts').innerHTML = '<div class="error">Error loading posts</div>';
@@ -336,43 +334,40 @@
             const currentDomain = window.location.origin;
 
             let instagramPostsHTML = '';
-            instagramPosts.forEach(post => {
+            instagramPosts.forEach((post) => {
                 instagramPostsHTML += `
-                    <a href="${ post.permalink }" target="_blank" style="display: inline-block; margin-right: 8px; margin-bottom: 8px;">
-                        <img src="${ post.thumbnail_path.startsWith('http') ? post.thumbnail_path : currentDomain + post.thumbnail_path }" 
-                             alt="Instagram post" 
-                             style="width: 60px; height: 80px; border-radius: 8px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    </a>
-                `;
+          <a href="${ post.permalink }" target="_blank" style="display:inline-block; margin-right:8px; margin-bottom:8px;">
+            <img src="${ post.thumbnail_path.startsWith('http') ? post.thumbnail_path : currentDomain + post.thumbnail_path }"
+                 alt="Instagram post"
+                 style="width:60px; height:80px; border-radius:8px; object-fit:cover;">
+          </a>
+        `;
             });
 
             const signatureHTML = `
-                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.4; color: #333; max-width: 500px;">
-                    <div style="margin-bottom: 15px;">
-                        <div style="font-size: 18px; font-weight: 600; color: #2c3e50; margin: 0 0 2px 0;">${ signatureConfig.name }</div>
-                        <div style="font-size: 14px; color: #7f8c8d; margin: 0 0 8px 0;">${ signatureConfig.title }</div>
-                        <div style="font-size: 14px; font-weight: 500; color: #34495e; margin: 0 0 8px 0;">${ signatureConfig.company }</div>
-                        <div style="margin: 3px 0; font-size: 13px;">📧 <a href="mailto:${ signatureConfig.email }" style="color: #3498db; text-decoration: none;">${ signatureConfig.email }</a></div>
-                        <div style="margin: 3px 0; font-size: 13px;">📞 ${ signatureConfig.phone }</div>
-                        <div style="margin: 3px 0; font-size: 13px;">🌐 <a href="${ signatureConfig.website }" target="_blank" style="color: #3498db; text-decoration: none;">${ signatureConfig.website }</a></div>
-                    </div>
-                    
-                    <hr style="height: 1px; background: linear-gradient(to right, #e74c3c, #f39c12, #f1c40f, #27ae60, #3498db, #9b59b6); margin: 15px 0; border: none;">
-                    
-                    <div style="margin-top: 15px;">
-                        <div style="font-size: 12px; color: #7f8c8d; margin-bottom: 8px; display: flex; align-items: center; gap: 5px;">
-                            <div style="width: 16px; height: 16px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); border-radius: 4px; position: relative;">
-                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; border: 1.5px solid white; border-radius: 2px;"></div>
-                                <div style="position: absolute; top: 3px; right: 3px; width: 2px; height: 2px; background: white; border-radius: 50%;"></div>
-                            </div>
-                            <span>Latest from Instagram</span>
-                        </div>
-                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                            ${ instagramPostsHTML }
-                        </div>
-                    </div>
-                </div>
-            `;
+        <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:14px; line-height:1.6; color:inherit; max-width:560px;">
+          <div style="display:flex; align-items:center; gap:10px; margin:0 0 8px 0; font-size:14px; color:inherit;">
+            <span style="font-weight:600; letter-spacing:1px">|</span>
+            <span style="opacity:0.8">Freundliche Grüße | Best Regards</span>
+          </div>
+          <div style="margin-bottom:10px;">
+            <div style="font-size:20px; font-weight:700; margin:0 0 2px 0; color:inherit;">${ signatureConfig.name }</div>
+            <div style="font-size:15px; margin:0 0 10px 0; font-weight:600; color:inherit;">${ signatureConfig.title }</div>
+            <div style="font-size:14px; font-weight:700; margin:0 0 10px 0; letter-spacing:0.2px; color:inherit; text-transform:uppercase;">${ signatureConfig.company }</div>
+            ${ signatureConfig.logoUrl ? `<img src="${ signatureConfig.logoUrl }" alt="Company logo" style="display:block; max-width:260px; height:auto; margin:12px 0;" />` : '' }
+            <div style="font-size:18px; font-weight:700; margin:16px 0 10px; color:inherit;">Event Entertainment</div>
+            <div style="margin:4px 0; font-size:14px; color:inherit;">📞 T ${ signatureConfig.phone }${ signatureConfig.mobile ? ` | M ${ signatureConfig.mobile }` : '' }</div>
+            <div style="margin:4px 0; font-size:14px; color:inherit;"><a href="${ signatureConfig.website }" target="_blank" style="color:inherit; text-decoration:underline;">${ signatureConfig.website }</a> | <a href="mailto:${ signatureConfig.email }" style="color:inherit; text-decoration:underline;">${ signatureConfig.email }</a></div>
+            ${ (signatureConfig.address?.street || signatureConfig.address?.city) ? `<div style=\"margin:4px 0; font-size:14px; color:inherit;\">${ [signatureConfig.address?.street, [(signatureConfig.address?.postalCode || signatureConfig.address?.postal_code), signatureConfig.address?.city].filter(Boolean).join(' ')].filter(Boolean).join(' | ') }</div>` : '' }
+          </div>
+          ${ instagramPostsHTML ? `
+          <hr style="height:1px; margin:12px 0; border:none; background:currentColor; opacity:0.15;">
+          <div style="margin-top:10px;">
+            <div style="font-size:12px; opacity:0.8; margin-bottom:6px;">Latest from Instagram</div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">${ instagramPostsHTML }</div>
+          </div>` : '' }
+        </div>
+      `;
 
             document.getElementById('signature-html').innerHTML = signatureHTML;
         }
@@ -380,20 +375,12 @@
         // Copy signature HTML to clipboard
         async function copySignatureHTML () {
             const signatureHTML = document.getElementById('signature-html').innerHTML;
-
             try {
                 await navigator.clipboard.writeText(signatureHTML);
-
                 const button = document.querySelector('.copy-button');
                 const originalText = button.textContent;
                 button.textContent = '✅ Copied!';
-                button.style.background = '#27ae60';
-
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.style.background = '#3498db';
-                }, 2000);
-
+                setTimeout(() => { button.textContent = originalText; }, 1500);
             } catch (error) {
                 console.error('Error copying to clipboard:', error);
                 alert('Error copying to clipboard. Please copy manually from the HTML section.');
@@ -404,8 +391,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadSignatureConfig();
             loadInstagramPosts();
-
-            // Refresh Instagram posts every 5 minutes
             setInterval(loadInstagramPosts, 5 * 60 * 1000);
         });
     </script>
