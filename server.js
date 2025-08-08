@@ -55,7 +55,10 @@ async function fetchInstagramPosts() {
       process.env.MAX_POSTS || 4
     }`;
 
-    console.log('Instagram API URL:', url);
+    console.log(
+      'Instagram API URL:',
+      url.replace(accessToken, '[TOKEN_HIDDEN]')
+    );
 
     const response = await fetch(url);
     console.log('Instagram API Response Status:', response.status);
@@ -64,7 +67,35 @@ async function fetchInstagramPosts() {
       Object.fromEntries(response.headers.entries())
     );
 
-    const data = await response.json();
+    // Get response as text first to handle non-JSON responses
+    const responseText = await response.text();
+    console.log('Instagram API Raw Response:', responseText.substring(0, 500));
+
+    // Check if response is successful
+    if (!response.ok) {
+      console.error(
+        `Instagram API returned ${response.status}: ${responseText}`
+      );
+      throw new Error(
+        `Instagram API error: ${response.status} - ${responseText}`
+      );
+    }
+
+    // Try to parse as JSON
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error(
+        'Failed to parse Instagram API response as JSON:',
+        parseError
+      );
+      console.error('Response text:', responseText);
+      throw new Error(
+        `Invalid JSON response from Instagram API: ${parseError.message}`
+      );
+    }
+
     console.log('Instagram API Response Data:', JSON.stringify(data, null, 2));
 
     // Check for API errors
@@ -350,7 +381,29 @@ app.get('/api/test-instagram', async (req, res) => {
     );
 
     const response = await fetch(url);
+    console.log('Test Instagram API Response Status:', response.status);
+    console.log(
+      'Test Instagram API Response Headers:',
+      Object.fromEntries(response.headers.entries())
+    );
+
     const responseText = await response.text();
+    console.log(
+      'Test Instagram API Raw Response:',
+      responseText.substring(0, 500)
+    );
+
+    // Check if response is successful
+    if (!response.ok) {
+      return res.json({
+        success: false,
+        error: `Instagram API returned ${response.status}`,
+        responseStatus: response.status,
+        responseHeaders: Object.fromEntries(response.headers.entries()),
+        responseText: responseText,
+        environment: process.env.NODE_ENV || 'development',
+      });
+    }
 
     let data;
     try {
