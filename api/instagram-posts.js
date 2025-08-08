@@ -68,8 +68,40 @@ async function fetchInstagramPosts() {
 
     const response = await fetch(url);
     console.log('Instagram API Response Status:', response.status);
+    console.log(
+      'Instagram API Response Headers:',
+      Object.fromEntries(response.headers.entries())
+    );
 
-    const data = await response.json();
+    // Get response as text first to handle non-JSON responses
+    const responseText = await response.text();
+    console.log('Instagram API Raw Response:', responseText.substring(0, 500));
+
+    // Check if response is successful
+    if (!response.ok) {
+      console.error(
+        `Instagram API returned ${response.status}: ${responseText}`
+      );
+      throw new Error(
+        `Instagram API error: ${response.status} - ${responseText}`
+      );
+    }
+
+    // Try to parse as JSON
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error(
+        'Failed to parse Instagram API response as JSON:',
+        parseError
+      );
+      console.error('Response text:', responseText);
+      throw new Error(
+        `Invalid JSON response from Instagram API: ${parseError.message}`
+      );
+    }
+
     console.log('Instagram API Response Data:', JSON.stringify(data, null, 2));
 
     // Check for API errors
