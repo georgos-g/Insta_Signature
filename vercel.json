@@ -4,10 +4,6 @@
     {
       "src": "/signature",
       "dest": "/signature.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
     }
   ],
   "headers": [
